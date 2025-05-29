@@ -10,18 +10,33 @@ Color Light_Purple = Color{147, 66, 219, 155};
 int player_score = 0;
 int cpu_score = 0;
 
-//create ball class which holds all of the ball's properties
+
+//Create ball class which holds all of the ball's properties
 class Ball{
 public:
 float x,y; 
 int speed_x, speed_y;
 int radius;
+Sound bounceSound;
+Sound scoreSound;
 
-//create method which will draw the ball
 void Draw() {
     DrawCircle(x,y, radius, WHITE);
 }
-//create method which will update the position of the ball
+
+Ball(Sound bounce, Sound score)
+{
+    bounceSound = bounce;
+    scoreSound = score;
+}
+
+void Bounce(){
+    PlaySound(bounceSound);
+}
+void Score(){
+    PlaySound(scoreSound);
+}
+
 void Update() {
     x += speed_x;
     y += speed_y;
@@ -33,17 +48,20 @@ void Update() {
     if(y + radius >= GetScreenHeight() || y-radius <= 0)
     {
         speed_y *= -1;
+        Bounce();
     }
-    //checks if ball hits right edge
+    
     if(x + radius >= GetScreenWidth()) //cpu scores points
     {
         cpu_score++;
+        Score();
         resetBall();
     }
-    //checks if ball hits left edge
+    
     if(x - radius <= 0) //player scores
     {
         player_score++;
+        Score();
         resetBall();
     }
 }
@@ -52,7 +70,6 @@ void resetBall()
 {
     x = GetScreenWidth()/2;
     y = GetScreenHeight()/2;
-    //sends ball in random direction by multiplying 
     int speeds[2] = {1,-1};
     speed_x *= speeds[GetRandomValue(0,1)];
     speed_y *= speeds[GetRandomValue(0,1)];
@@ -60,10 +77,9 @@ void resetBall()
 };
 
 class Paddle {
-// protected allows memmbers to not be accessed outside the class but can by inherited classes
+// protected allows members to not be accessed outside the class but can by inherited classes
 // differs from private which does not allow any access from outside the class
 protected:
-//create a protected method which will prevent paddles from crossing bottom or top edges
 void LimitMovement()
 {
     if(y<= 0)
@@ -131,22 +147,21 @@ class cpuPaddle: public Paddle{
     }
 };
 
-//Initialize game ball
-Ball ball;
+
 Paddle player;
 cpuPaddle cpu;
 int main () {
 
-
-    //declare constant variables which will be used to define window's width and height
     const int screen_width = 1280;
     const int screen_height = 800;
-
-    // call on InitWindow which takes in width, height, and title
     InitWindow(screen_width, screen_height, "Pong!");
-    //function which initializes game's framerate (if not initialized computer will run game at highest framerate possible)
+    InitAudioDevice();
     SetTargetFPS(60);
+
     // set ball's properties
+    Sound PongBounce = LoadSound("sounds/PongBounce.mp3");
+    Sound PongScore = LoadSound("sounds/PongScore.mp3");    
+    Ball ball(PongBounce, PongScore);
     ball.radius = 20;
     ball.x = screen_width/2;
     ball.y = screen_height/2;
@@ -160,7 +175,7 @@ int main () {
     player.y = screen_height/2 - player.height/2;
     player.speed = 6;
 
-    //set player's paddle properties
+    //set cpu's paddle properties
     cpu.width = 20;
     cpu.height = 120;
     cpu.x = 10;
@@ -168,41 +183,33 @@ int main () {
     cpu.speed = 6;
 
     //GAME LOOP
-    //run while loop while WindowShouldClose function returns false
     //WindowShouldClose will only return true if ESC key is pressed or if close icon on window is pressed
     while(WindowShouldClose() == false){
-            //creates canvas to draw entities
-            BeginDrawing();
 
-            //Updating Ball's position
+            BeginDrawing();
             ball.Update();
-            //Updating Player Paddle
             player.Update();
-            //update cpu's paddle
             cpu.Update(ball.y);
 
             //Check for ball collision with paddles
             if(CheckCollisionCircleRec(Vector2{ball.x,ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height}))
             {
                 ball.speed_x *= -1;
+                ball.Bounce();
             }
             if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x,cpu.y,cpu.width,cpu.height}))
             {
                 ball.speed_x *= -1;
+                ball.Bounce();
             }
 
             //Drawing
-            //Clean background of game before drawing objects
             ClearBackground(Dark_Purple);
             DrawRectangle(screen_width/2, 0,screen_width/2, screen_height, Purple);
             DrawCircle(screen_width/2, screen_height/2, 150, Light_Purple);
-            // Draw line which separates both players
             DrawLine(screen_width/2, 0, screen_width/2, screen_height, WHITE);
-            //Ball
             ball.Draw();
-            //Left Paddle
             cpu.Draw();
-            //Right Paddle
             player.Draw();
 
             //draw scoreboard
@@ -212,6 +219,7 @@ int main () {
             EndDrawing();
     }
 
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
