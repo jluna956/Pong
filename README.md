@@ -10,7 +10,7 @@ Pong! is a simple, modern implementation of the classic Pong game, built using C
 ## Future Improvements
 
 - Background Music
-- Sound Effects
+- <s>Sound Effects</s> (5/28)
 - Increasing Difficulty Feature
 - Start Menu
 - 2-Player Feature
