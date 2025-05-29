@@ -1,26 +1,20 @@
-# Raylib C++ Starter Template
+# Pong!
+Pong! is a simple, modern implementation of the classic Pong game, built using C++ and the Raylib library.
 
-Raylib C++ Starter Template for Visual Studio Code on Windows.
+![Image](https://github.com/user-attachments/assets/274ab34b-53f8-49e2-9d1d-d69acedc2cf6)
 
-This demo project contains a bouncing ball raylib example program.
+## How It's Made:
 
-It works with raylib version 4.5.
-Tested on both Windows 10 and Windows 11.
+**Tech used:** C++, Raylib
 
-# Video Tutorial
+## Future Improvements
 
-<p align="center">
-  <img src="preview.jpg" alt="" width="800">
-</p>
+- Background Music
+- Sound Effects
+- Increasing Difficulty Feature
+- Start Menu
+- 2-Player Feature
 
-<p align="center">
-🎥 <a href="https://www.youtube.com/watch?v=PaAcVk5jUd8">Video Tutorial on YouTube</a>
-</p>
+## Lessons Learned:
 
-<br>
-<br>
-<p align="center">
-| 📺 <a href="https://www.youtube.com/channel/UC3ivOTE5EgpmF2DHLBmWIWg">My YouTube Channel</a>
-| 🌍 <a href="https://www.programmingwithnick.com">My Website</a> | <br>
-</p>
-
+Building this project was a great opportunity to deepen my understanding of C++ and apply object-oriented programming (OOP) principles in a practical context. One of the biggest takeaways was learning how to use the Raylib library to handle graphics, input, and game loops—something I had never worked with before. It was incredibly rewarding to see everything come together into a functioning, playable game.
